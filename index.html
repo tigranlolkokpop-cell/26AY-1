@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Прототип интерфейса системы контроля усталости и сонливости водителя."
+    />
+    <meta name="theme-color" content="#101513" />
+    <title>Смена — контроль состояния водителя</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar" aria-label="Главное меню">
+        <a class="brand" href="#home" aria-label="Смена — на главную">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M4 17.5h6l3.4-9 5.2 16 3.5-9H28" />
+            </svg>
+          </span>
+          <span class="brand-name">смена<span>.</span></span>
+        </a>
+
+        <div class="menu-caption">РАБОЧЕЕ ПРОСТРАНСТВО</div>
+        <nav class="navigation">
+          <a class="nav-link active" href="#home" aria-current="page">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1V10Z" />
+            </svg>
+            <span>Главная</span>
+            <span class="nav-dot"></span>
+          </a>
+          <a class="nav-link" href="#camera">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="6" width="13" height="12" rx="2" />
+              <path d="m16 10 5-3v10l-5-3" />
+            </svg>
+            <span>Камера</span>
+          </a>
+          <a class="nav-link" href="#about">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 11v5m0-8h.01" />
+            </svg>
+            <span>О проекте</span>
+          </a>
+          <a class="nav-link" href="#workers">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="10" cy="7" r="4" />
+              <path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            <span>Работникам</span>
+            <span class="nav-count" id="nav-alert-count" hidden>0</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="privacy-note">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="4" y="10" width="16" height="11" rx="2" />
+              <path d="M8 10V7a4 4 0 1 1 8 0v3m-4 5v2" />
+            </svg>
+            <span>Камера включается<br />только с вашего согласия</span>
+          </div>
+          <div class="user-card">
+            <div class="avatar" aria-hidden="true">АУ</div>
+            <div class="user-info">
+              <strong>Учебный проект</strong>
+              <span>Личный кабинет</span>
+            </div>
+            <span class="user-menu-dots" aria-hidden="true">···</span>
+          </div>
+        </div>
+      </aside>
+
+      <main id="home" data-view="home">
+        <header class="topbar">
+          <button
+            class="icon-button menu-toggle"
+            id="menu-toggle"
+            type="button"
+            aria-label="Открыть меню"
+            aria-expanded="false"
+            aria-controls="sidebar"
+          >
+            <span></span><span></span>
+          </button>
+          <div class="breadcrumb"><span id="breadcrumb-parent">Рабочее пространство</span><b>/</b><span id="breadcrumb-current">Главная</span></div>
+          <div class="topbar-right">
+            <span class="local-time" id="local-time">--:--</span>
+            <span class="topbar-divider"></span>
+            <span class="topbar-date" id="local-date">Загрузка даты</span>
+            <span class="topbar-avatar" aria-label="Учебный проект">АУ</span>
+          </div>
+        </header>
+
+        <div class="page-content">
+          <section class="welcome-row" aria-labelledby="welcome-title">
+            <div>
+              <div class="eyebrow"><span class="eyebrow-line"></span> БЕЗОПАСНОСТЬ НА ДОРОГЕ</div>
+              <h1 id="welcome-title">Внимание —<br />главное на маршруте<span>.</span></h1>
+              <p class="welcome-copy">
+                Прототип системы контроля усталости и сонливости водителя.
+                Подключите камеру, чтобы начать.
+              </p>
+            </div>
+            <div class="welcome-index" aria-hidden="true">
+              <span>ПРОЕКТ</span>
+              <strong>26<span>—</span>АУ<span>—</span>1</strong>
+              <i></i>
+            </div>
+          </section>
+
+          <section class="overview-grid" aria-label="Сводка">
+            <article class="stat-card status-card">
+              <div class="card-topline">
+                <span class="stat-label">СОСТОЯНИЕ СИСТЕМЫ</span>
+                <span class="status-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 3v9m0 0 4-4m-4 4L8 8m-4 5v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5" /></svg>
+                </span>
+              </div>
+              <div class="stat-value status-value"><span class="status-indicator"></span><span id="system-status">Ожидание подключения</span></div>
+              <div class="stat-foot" id="monitor-status">Подключите камеру для начала контроля</div>
+            </article>
+            <article class="stat-card">
+              <div class="card-topline">
+                <span class="stat-label">ВЫБРАННАЯ КАМЕРА</span>
+                <span class="mini-camera-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2" /><path d="m16 10 5-3v10l-5-3" /></svg>
+                </span>
+              </div>
+              <div class="stat-value" id="selected-camera-label">Камера 1</div>
+              <div class="stat-foot">Устройство не подключено</div>
+            </article>
+            <article class="stat-card privacy-card">
+              <div class="card-topline">
+                <span class="stat-label">ВАШИ ДАННЫЕ</span>
+                <span class="privacy-shield" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" /><path d="m9 12 2 2 4-4" /></svg>
+                </span>
+              </div>
+              <div class="stat-value">Только у вас</div>
+              <div class="stat-foot">Видео не отправляется на сервер</div>
+            </article>
+          </section>
+
+          <section class="camera-section" id="camera" aria-labelledby="camera-heading">
+            <div class="section-heading">
+              <div>
+                <div class="eyebrow section-eyebrow"><span class="eyebrow-line"></span> МОНИТОРИНГ</div>
+                <h2 id="camera-heading">Камера наблюдения</h2>
+              </div>
+              <div class="camera-controls">
+                <label class="select-wrap">
+                  <span class="sr-only">Выберите камеру</span>
+                  <select id="camera-select" aria-label="Выберите камеру">
+                    <option value="">Камера 1</option>
+                  </select>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" /></svg>
+                </label>
+                <button class="connect-button" id="camera-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="6" width="13" height="12" rx="2" />
+                    <path d="m16 10 5-3v10l-5-3" />
+                  </svg>
+                  <span id="camera-button-label">Подключить камеру</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="camera-frame" id="camera-frame">
+              <video id="camera-video" autoplay playsinline muted aria-label="Предпросмотр с камеры"></video>
+              <div class="camera-overlay" id="camera-placeholder">
+                <div class="camera-decoration decoration-top-left"></div>
+                <div class="camera-decoration decoration-top-right"></div>
+                <div class="camera-decoration decoration-bottom-left"></div>
+                <div class="camera-decoration decoration-bottom-right"></div>
+                <div class="preview-content">
+                  <div class="camera-emblem">
+                    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                      <rect x="4" y="8" width="17" height="16" rx="3" />
+                      <path d="m21 13 7-4v14l-7-4" />
+                      <path d="M12.5 13v6m-3-3h6" />
+                    </svg>
+                  </div>
+                  <h3 id="preview-title">Камера не подключена</h3>
+                  <p id="preview-description">Разрешите доступ к камере, чтобы увидеть предпросмотр</p>
+                  <span class="secure-note">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="8" rx="1.5" /><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" /></svg>
+                    Анализ выполняется в этом браузере
+                  </span>
+                </div>
+                <div class="frame-label"><span class="frame-label-dot"></span> ПРЕДПРОСМОТР</div>
+                <div class="frame-counter">CAM 01 <span>•</span> 16:9</div>
+              </div>
+              <div class="live-badge" id="live-badge" hidden><span></span> ПРЯМОЙ ЭФИР</div>
+              <div class="camera-error" id="camera-error" role="alert" hidden></div>
+              <div class="camera-alert-stack" id="camera-alerts" role="alert" aria-live="assertive" hidden></div>
+            </div>
+            <p class="prototype-disclaimer">
+              <span aria-hidden="true">i</span>
+              Предупреждения — вспомогательная функция прототипа, а не сертифицированная система безопасности.
+            </p>
+          </section>
+
+          <section class="about-section" id="about">
+            <div class="about-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" /><path d="m9 12 2 2 4-4" /></svg>
+            </div>
+            <div>
+              <strong>Безопасность начинается с внимания</strong>
+              <p>Проект «Смена» задуман, чтобы помогать замечать признаки усталости за рулём.</p>
+            </div>
+            <a href="#camera" class="about-link" aria-label="Перейти к камере">↗</a>
+          </section>
+
+          <footer class="page-footer">
+            <span>СМЕНА <span class="footer-dot">·</span> УЧЕБНЫЙ ПРОЕКТ</span>
+            <span>Забота о водителе — забота о каждом</span>
+          </footer>
+        </div>
+
+        <section class="page-content workers-page" id="workers" aria-labelledby="workers-heading">
+          <header class="workers-heading">
+            <div>
+              <div class="eyebrow"><span class="eyebrow-line"></span> РАБОЧЕЕ ПРОСТРАНСТВО</div>
+              <h1 id="workers-heading">Кабинет работников<span>.</span></h1>
+              <p class="welcome-copy">Оповещения и журнал нарушений с подключённой камеры.</p>
+            </div>
+            <div class="worker-live-status" id="worker-live-status">
+              <span class="worker-live-dot"></span>
+              <span id="worker-live-label">Мониторинг не запущен</span>
+            </div>
+          </header>
+
+          <div class="worker-stats">
+            <article class="worker-stat">
+              <span class="stat-label">АКТИВНЫЕ ПРЕДУПРЕЖДЕНИЯ</span>
+              <strong id="active-alert-count">0</strong>
+              <span>Сейчас</span>
+            </article>
+            <article class="worker-stat">
+              <span class="stat-label">НАРУШЕНИЯ СЕГОДНЯ</span>
+              <strong id="today-event-count">0</strong>
+              <span>В этом браузере</span>
+            </article>
+            <article class="worker-stat">
+              <span class="stat-label">ПОСЛЕДНЯЯ ПРОВЕРКА</span>
+              <strong id="last-check-value">—</strong>
+              <span id="last-check-caption">Камера не подключена</span>
+            </article>
+          </div>
+
+          <section class="worker-panel" aria-labelledby="alerts-heading">
+            <div class="worker-panel-heading">
+              <div>
+                <div class="eyebrow section-eyebrow"><span class="eyebrow-line"></span> УВЕДОМЛЕНИЯ</div>
+                <h2 id="alerts-heading">Состояние водителя</h2>
+              </div>
+              <span class="panel-live-tag"><span></span> LIVE</span>
+            </div>
+            <div class="worker-alert-list" id="worker-alerts" aria-live="polite">
+              <div class="worker-empty" id="worker-alerts-empty">
+                <span class="empty-check" aria-hidden="true">✓</span>
+                <div><strong>Пока нет предупреждений</strong><p>Подключите камеру на главной — здесь появятся события мониторинга.</p></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="worker-panel history-panel" aria-labelledby="history-heading">
+            <div class="worker-panel-heading history-heading">
+              <div>
+                <div class="eyebrow section-eyebrow"><span class="eyebrow-line"></span> ИСТОРИЯ СОБЫТИЙ</div>
+                <h2 id="history-heading">Журнал нарушений</h2>
+              </div>
+              <button class="text-button" id="clear-history" type="button">Очистить историю</button>
+            </div>
+            <div class="history-table-wrap">
+              <table class="history-table">
+                <thead>
+                  <tr><th>СОБЫТИЕ</th><th>КАМЕРА</th><th>НАЧАЛО</th><th>ДЛИТЕЛЬНОСТЬ</th><th>СТАТУС</th></tr>
+                </thead>
+                <tbody id="history-rows">
+                  <tr class="history-empty-row"><td colspan="5">Нарушений пока нет. История появится после срабатывания предупреждения.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="history-privacy">
+              История хранится только в этом браузере и не синхронизируется между устройствами.
+            </p>
+          </section>
+
+          <aside class="worker-disclaimer">
+            <span aria-hidden="true">i</span>
+            <p><strong>Важно:</strong> распознавание лица выполняется в браузере с помощью модели MediaPipe. Для загрузки модели и библиотеки нужно подключение к интернету; кадры при этом не отправляются и не сохраняются. Система является прототипом и не заменяет контроль водителя человеком.</p>
+          </aside>
+          <footer class="page-footer">
+            <span>СМЕНА <span class="footer-dot">·</span> КАБИНЕТ РАБОТНИКОВ</span>
+            <span>Журнал хранится локально на этом устройстве</span>
+          </footer>
+        </section>
+      </main>
+    </div>
+    <div class="sidebar-scrim" id="sidebar-scrim" aria-hidden="true"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
