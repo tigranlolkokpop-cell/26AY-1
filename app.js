@@ -1,3 +1,18 @@
+const appShell = document.querySelector(".app-shell");
+const loginScreen = document.querySelector("#login-screen");
+const loginForm = document.querySelector("#login-form");
+const loginError = document.querySelector("#login-error");
+const robotConfirm = document.querySelector("#robot-confirm");
+const logoutButton = document.querySelector("#logout-button");
+const DEMO_ACCOUNTS = {
+  "1": { password: "1", role: "teacher", name: "Учитель", description: "Полный доступ", initials: "УЧ" },
+  "2": { password: "2", role: "admin", name: "Администратор", description: "Рабочее пространство", initials: "АД" },
+  "3": { password: "3", role: "worker", name: "Работник", description: "Доступ к камере", initials: "РБ" },
+};
+const VALID_ROLES = new Set(Object.values(DEMO_ACCOUNTS).map((account) => account.role));
+
+let currentRole = null;
+
 const video = document.querySelector("#camera-video");
 const cameraButton = document.querySelector("#camera-button");
 const cameraButtonLabel = document.querySelector("#camera-button-label");
@@ -160,7 +175,7 @@ function renderWorkerData() {
     const text = createElement("div");
     text.append(
       createElement("strong", "", "Пока нет предупреждений"),
-      createElement("p", "", "Подключите камеру на главной — здесь появятся события мониторинга."),
+      createElement("p", "", "Подключите камеру во вкладке «Камера» — здесь появятся события мониторинга."),
     );
     empty.append(text);
     workerAlerts.append(empty);
@@ -650,18 +665,38 @@ function closeMenu() {
 }
 
 function updatePage() {
-  const isWorkers = window.location.hash === "#workers";
-  main.dataset.view = isWorkers ? "workers" : "home";
+  if (!currentRole) return;
+
+  const requestedRoute = window.location.hash;
+  const allowedRoutes = currentRole === "teacher"
+    ? new Set(["#home", "#camera", "#about", "#workers"])
+    : currentRole === "admin"
+      ? new Set(["#home", "#camera", "#workers"])
+      : new Set(["#camera"]);
+  const route = allowedRoutes.has(requestedRoute)
+    ? requestedRoute
+    : currentRole === "worker" ? "#camera" : "#home";
+  if (route !== requestedRoute) {
+    window.location.hash = route;
+  }
+  const isWorkers = route === "#workers";
+  const isAbout = route === "#about";
+  const isCamera = route === "#camera";
+  main.dataset.view = isWorkers ? "workers" : isAbout ? "about" : isCamera ? "camera" : "home";
   document.querySelector("#breadcrumb-parent").textContent = "Рабочее пространство";
-  document.querySelector("#breadcrumb-current").textContent = isWorkers ? "Кабинет работников" : "Главная";
+  document.querySelector("#breadcrumb-current").textContent = isWorkers
+    ? "Кабинет работников"
+    : isAbout ? "О проекте" : route === "#camera" ? "Камера" : "Главная";
   document.title = isWorkers
-    ? "Кабинет работников — Смена"
-    : "Смена — контроль состояния водителя";
+    ? "Кабинет работников — FocusDrive"
+    : isAbout ? "О проекте — FocusDrive"
+      : route === "#camera" ? "Модуль видеоконтроля — FocusDrive"
+        : "FocusDrive — безопасность водителей";
 
   const activeHref = isWorkers
     ? "#workers"
-    : window.location.hash === "#camera" ? "#camera"
-      : window.location.hash === "#about" ? "#about" : "#home";
+    : isAbout ? "#about"
+      : route === "#camera" ? "#camera" : "#home";
   sidebar.querySelectorAll(".nav-link").forEach((link) => {
     const active = link.getAttribute("href") === activeHref;
     link.classList.toggle("active", active);
@@ -669,6 +704,60 @@ function updatePage() {
     else link.removeAttribute("aria-current");
   });
 }
+
+function activateRole(role) {
+  const account = Object.values(DEMO_ACCOUNTS).find((entry) => entry.role === role);
+  if (!account) return;
+
+  currentRole = role;
+  document.body.dataset.role = role;
+  document.querySelector("#user-role-name").textContent = account.name;
+  document.querySelector("#user-role-description").textContent = account.description;
+  document.querySelector(".avatar").textContent = account.initials;
+  const topbarAvatar = document.querySelector("#topbar-avatar");
+  topbarAvatar.textContent = account.initials;
+  topbarAvatar.setAttribute("aria-label", account.name);
+  appShell.hidden = false;
+  loginScreen.hidden = true;
+  window.location.hash = role === "worker" ? "#camera" : "#home";
+  updatePage();
+}
+
+loginForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const username = document.querySelector("#login-username").value.trim();
+  const password = document.querySelector("#login-password").value;
+  const account = DEMO_ACCOUNTS[username];
+
+  loginError.hidden = true;
+  loginError.textContent = "";
+  if (!username || !password) {
+    loginError.textContent = "Введите логин и пароль.";
+  } else if (!robotConfirm.checked) {
+    loginError.textContent = "Подтвердите отметку «Я не робот», чтобы продолжить.";
+  } else if (!account || account.password !== password) {
+    loginError.textContent = "Неверный логин или пароль.";
+  } else {
+    sessionStorage.setItem("smena-role", account.role);
+    activateRole(account.role);
+    return;
+  }
+
+  loginError.hidden = false;
+});
+
+logoutButton.addEventListener("click", () => {
+  stopCamera();
+  sessionStorage.removeItem("smena-role");
+  currentRole = null;
+  delete document.body.dataset.role;
+  appShell.hidden = true;
+  loginScreen.hidden = false;
+  loginForm.reset();
+  loginError.hidden = true;
+  window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+  document.querySelector("#login-username").focus();
+});
 
 menuToggle.addEventListener("click", () => {
   const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
@@ -711,6 +800,13 @@ document.addEventListener("visibilitychange", () => {
 
 window.addEventListener("pagehide", () => stopCamera(true));
 updateClock();
+const storedRole = sessionStorage.getItem("smena-role");
+if (storedRole && VALID_ROLES.has(storedRole)) {
+  activateRole(storedRole);
+} else {
+  sessionStorage.removeItem("smena-role");
+  document.querySelector("#login-username").focus();
+}
 updatePage();
 const interruptedEvents = historyEvents.filter((event) => !event.endedAt);
 interruptedEvents.forEach((event) => {

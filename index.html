@@ -7,8 +7,8 @@
       name="description"
       content="Прототип интерфейса системы контроля усталости и сонливости водителя."
     />
-    <meta name="theme-color" content="#101513" />
-    <title>Смена — контроль состояния водителя</title>
+    <meta name="theme-color" content="#0b080f" />
+    <title>FocusDrive — контроль состояния водителя</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -19,20 +19,66 @@
     <script src="app.js" defer></script>
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="sidebar" id="sidebar" aria-label="Главное меню">
-        <a class="brand" href="#home" aria-label="Смена — на главную">
+    <section class="login-screen" id="login-screen" aria-labelledby="login-heading">
+      <div class="login-card">
+        <a class="brand login-brand" href="#" aria-label="FocusDrive">
           <span class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 32 32" fill="none">
-              <path d="M4 17.5h6l3.4-9 5.2 16 3.5-9H28" />
+            <svg viewBox="0 0 40 32" fill="none">
+              <path d="m6 7 20 4-2 10-16-2L6 7Z" />
+              <path d="M25 14h7l5 6v4H23l2-10Z" />
+              <path d="M8 23h29" />
+              <circle cx="14" cy="24" r="3" />
+              <circle cx="31" cy="24" r="3" />
             </svg>
           </span>
-          <span class="brand-name">смена<span>.</span></span>
+          <span class="brand-name">FocusDrive</span>
+        </a>
+        <div class="eyebrow"><span class="eyebrow-line"></span> ЗАЩИЩЁННЫЙ ВХОД</div>
+        <h1 id="login-heading">Вход в систему<span>.</span></h1>
+        <p class="login-intro">Введите данные своей учётной записи, чтобы открыть рабочее пространство.</p>
+        <form class="login-form" id="login-form" novalidate>
+          <label class="login-field" for="login-username">
+            <span>Логин</span>
+            <input id="login-username" name="username" type="text" autocomplete="username" inputmode="numeric" placeholder="Введите логин" required />
+          </label>
+          <label class="login-field" for="login-password">
+            <span>Пароль</span>
+            <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Введите пароль" required />
+          </label>
+          <label class="robot-check" for="robot-confirm">
+            <input id="robot-confirm" name="robot-confirm" type="checkbox" required />
+            <span class="robot-checkbox" aria-hidden="true"></span>
+            <span>Я не робот</span>
+          </label>
+          <p class="login-error" id="login-error" role="alert" hidden></p>
+          <button class="login-submit" type="submit">Войти <span aria-hidden="true">↗</span></button>
+        </form>
+        <p class="login-demo-note">
+          Учебный режим: отметка «Я не робот» — демонстрационная проверка, а не настоящая CAPTCHA.
+          Учётные записи предназначены только для показа прототипа.
+        </p>
+      </div>
+      <div class="login-footer">© 2026 Тушин Тигран <span>·</span> УЧЕБНЫЙ ПРОЕКТ</div>
+    </section>
+
+    <div class="app-shell" hidden>
+      <aside class="sidebar" id="sidebar" aria-label="Главное меню">
+        <a class="brand" href="#home" aria-label="FocusDrive — на главную">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 32" fill="none">
+              <path d="m6 7 20 4-2 10-16-2L6 7Z" />
+              <path d="M25 14h7l5 6v4H23l2-10Z" />
+              <path d="M8 23h29" />
+              <circle cx="14" cy="24" r="3" />
+              <circle cx="31" cy="24" r="3" />
+            </svg>
+          </span>
+          <span class="brand-name">FocusDrive</span>
         </a>
 
         <div class="menu-caption">РАБОЧЕЕ ПРОСТРАНСТВО</div>
         <nav class="navigation">
-          <a class="nav-link active" href="#home" aria-current="page">
+          <a class="nav-link active" href="#home" aria-current="page" data-access="staff">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1V10Z" />
             </svg>
@@ -46,14 +92,14 @@
             </svg>
             <span>Камера</span>
           </a>
-          <a class="nav-link" href="#about">
+          <a class="nav-link" href="#about" data-access="teacher">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="12" cy="12" r="9" />
               <path d="M12 11v5m0-8h.01" />
             </svg>
             <span>О проекте</span>
           </a>
-          <a class="nav-link" href="#workers">
+          <a class="nav-link" href="#workers" data-access="staff">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
               <circle cx="10" cy="7" r="4" />
@@ -75,10 +121,10 @@
           <div class="user-card">
             <div class="avatar" aria-hidden="true">АУ</div>
             <div class="user-info">
-              <strong>Учебный проект</strong>
-              <span>Личный кабинет</span>
+              <strong id="user-role-name">Учебный проект</strong>
+              <span id="user-role-description">Личный кабинет</span>
             </div>
-            <span class="user-menu-dots" aria-hidden="true">···</span>
+            <button class="logout-button" id="logout-button" type="button">Выйти</button>
           </div>
         </div>
       </aside>
@@ -100,31 +146,167 @@
             <span class="local-time" id="local-time">--:--</span>
             <span class="topbar-divider"></span>
             <span class="topbar-date" id="local-date">Загрузка даты</span>
-            <span class="topbar-avatar" aria-label="Учебный проект">АУ</span>
+            <span class="topbar-avatar" id="topbar-avatar" aria-label="Учётная запись">АУ</span>
           </div>
         </header>
 
         <div class="page-content">
-          <section class="welcome-row" aria-labelledby="welcome-title">
-            <div>
-              <div class="eyebrow"><span class="eyebrow-line"></span> БЕЗОПАСНОСТЬ НА ДОРОГЕ</div>
-              <h1 id="welcome-title">Внимание —<br />главное на маршруте<span>.</span></h1>
+          <section class="welcome-row landing-hero" aria-labelledby="welcome-title">
+            <div class="landing-hero-copy">
+              <div class="eyebrow"><span class="eyebrow-line"></span> БЕЗОПАСНОСТЬ СПЕЦТЕХНИКИ И ГРУЗОПЕРЕВОЗОК</div>
+              <h1 id="welcome-title">FocusDrive —<br />безопасность под контролем<span>.</span></h1>
               <p class="welcome-copy">
-                Прототип системы контроля усталости и сонливости водителя.
-                Подключите камеру, чтобы начать.
+                Концепция системы мониторинга усталости водителей с помощью компьютерного зрения.
+                Помогаем замечать тревожные признаки в карьерах и на дальних маршрутах.
               </p>
+              <div class="landing-actions">
+                <a class="landing-primary-link" href="#camera">Посмотреть модуль камеры <span aria-hidden="true">↗</span></a>
+                <a class="landing-secondary-link" href="#about" data-access="teacher">О проекте</a>
+              </div>
             </div>
-            <div class="welcome-index" aria-hidden="true">
-              <span>ПРОЕКТ</span>
-              <strong>26<span>—</span>АУ<span>—</span>1</strong>
-              <i></i>
+            <div class="landing-truck-scene">
+              <svg class="haul-truck-art" viewBox="0 0 900 430" role="img" aria-labelledby="haul-truck-title haul-truck-description">
+                <title id="haul-truck-title">Карьерный самосвал FocusDrive</title>
+                <desc id="haul-truck-description">Иллюстрация крупного жёлтого карьерного самосвала на фоне горного карьера.</desc>
+                <defs>
+                  <linearGradient id="truck-body" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#ffe28a" />
+                    <stop offset=".48" stop-color="#ffbf43" />
+                    <stop offset="1" stop-color="#d77a20" />
+                  </linearGradient>
+                  <linearGradient id="truck-shadow" x1="0" y1="0" x2="0" y2="1">
+                    <stop stop-color="#30303e" />
+                    <stop offset="1" stop-color="#111019" />
+                  </linearGradient>
+                  <linearGradient id="truck-glass" x1="0" y1="0" x2="1" y2="1">
+                    <stop stop-color="#c7f5ef" />
+                    <stop offset="1" stop-color="#426f7a" />
+                  </linearGradient>
+                  <radialGradient id="truck-glow">
+                    <stop stop-color="#f276bd" stop-opacity=".29" />
+                    <stop offset="1" stop-color="#f276bd" stop-opacity="0" />
+                  </radialGradient>
+                </defs>
+                <ellipse cx="540" cy="345" rx="345" ry="65" fill="url(#truck-glow)" />
+                <path d="M0 316 125 252l102 48 133-102 112 91 105-98 122 100 92-60 109 84v115H0Z" fill="#211a2b" />
+                <path d="m0 353 170-77 118 61 126-77 142 74 109-54 135 56 100-38v132H0Z" fill="#17131f" />
+                <path d="M63 352h790" stroke="#705172" stroke-opacity=".48" stroke-width="2" />
+                <path d="m78 372 61-9m60 18 86-12m94 9 54-7m86 12 64-10m97 8 65-8" stroke="#9a718e" stroke-opacity=".35" stroke-width="3" stroke-linecap="round" />
+                <g opacity=".45" fill="none" stroke="#f276bd">
+                  <path d="M514 104h95v-34h88" stroke-dasharray="4 7" />
+                  <circle cx="514" cy="104" r="4" fill="#f276bd" />
+                  <circle cx="697" cy="70" r="4" fill="#f276bd" />
+                  <path d="M592 153h138v-28h94" stroke-dasharray="3 8" />
+                </g>
+                <g>
+                  <path d="m113 88 385 36-31 144-345-25Z" fill="url(#truck-body)" stroke="#ffe39a" stroke-width="4" stroke-linejoin="round" />
+                  <path d="m136 111 328 31-21 98-294-21Z" fill="#2c2633" opacity=".92" />
+                  <path d="m115 87 385 37-9 38-366-33Z" fill="#ffdb77" />
+                  <path d="m498 121 31 11-25 136-38-4Z" fill="#be6d25" />
+                  <path d="m168 247 276 18-8 21-269-16Z" fill="#4b3440" />
+                  <path d="M289 281h410l101 53H237Z" fill="url(#truck-shadow)" />
+                  <path d="m462 228 92 15 36 91H451Z" fill="url(#truck-body)" stroke="#ffe19a" stroke-width="3" />
+                  <path d="m493 244 48 8 22 51h-62Z" fill="url(#truck-glass)" stroke="#4b4250" stroke-width="4" />
+                  <path d="m546 256 14 4 14 35h-17Z" fill="#efc7e0" opacity=".48" />
+                  <path d="m576 266 93 9 53 50H571Z" fill="url(#truck-body)" stroke="#ffe19a" stroke-width="3" />
+                  <path d="m671 279 39 4 48 46h-47Z" fill="#ffcf64" />
+                  <path d="m745 326 20 2 6 13h-33Z" fill="#ffd6e9" />
+                  <path d="m576 321 200 8-4 15-206-7Z" fill="#9e571f" />
+                  <path d="m470 334 305 8 38 16H446Z" fill="#282432" />
+                  <path d="M483 349h322" stroke="#f276bd" stroke-opacity=".65" stroke-width="3" />
+                  <path d="M586 222v-22h30v27m-11-27v-14" fill="none" stroke="#d79535" stroke-width="7" stroke-linecap="round" />
+                  <path d="M611 184h9" stroke="#f276bd" stroke-width="4" stroke-linecap="round" />
+                  <path d="m540 307 34 1 6 14h-42Z" fill="#ff9fcf" />
+                  <path d="m544 311 23 1" stroke="#fff0f7" stroke-width="2" />
+                  <path d="m781 331 47 9 10 14-58-3Z" fill="#f276bd" />
+                  <path d="M269 281v-35m70 40v-29m76 31v-25m72 27v-23m79 25v-24m81 27v-22" stroke="#d98c38" stroke-width="7" />
+                </g>
+                <g>
+                  <circle cx="335" cy="327" r="76" fill="#101018" stroke="#625363" stroke-width="5" />
+                  <circle cx="335" cy="327" r="48" fill="#282331" stroke="#b4a1b1" stroke-width="4" />
+                  <circle cx="335" cy="327" r="17" fill="#d4c2ce" />
+                  <circle cx="335" cy="327" r="7" fill="#332839" />
+                  <path d="M335 282v29m0 32v29m-44-45h29m31 0h29m-76-31 20 21m23 23 20 20m-63-1 20-20m23-23 20-20" stroke="#817283" stroke-width="5" />
+                  <circle cx="676" cy="333" r="59" fill="#101018" stroke="#625363" stroke-width="5" />
+                  <circle cx="676" cy="333" r="37" fill="#282331" stroke="#b4a1b1" stroke-width="4" />
+                  <circle cx="676" cy="333" r="13" fill="#d4c2ce" />
+                  <path d="M676 298v22m0 27v22m-35-36h23m24 0h23m-59-25 17 17m18 18 17 17m-52 0 17-17m18-18 17-17" stroke="#817283" stroke-width="4" />
+                </g>
+                <path d="M458 356h395" stroke="#f276bd" stroke-opacity=".2" stroke-width="2" />
+              </svg>
             </div>
           </section>
 
-          <section class="overview-grid" aria-label="Сводка">
+          <section class="landing-section" aria-labelledby="risk-heading">
+            <div class="landing-section-heading">
+              <div class="eyebrow"><span class="eyebrow-line"></span> ПОЧЕМУ ЭТО ВАЖНО</div>
+              <h2 id="risk-heading">Усталость за рулём — риск для людей и предприятия</h2>
+              <p>Длинные смены и ночные маршруты могут снижать внимание. В тяжёлой технике цена ошибки особенно высока.</p>
+            </div>
+            <div class="landing-card-grid risk-grid">
+              <article class="landing-card">
+                <span class="landing-card-index">01 / ВНИМАНИЕ</span>
+                <h3>Человеческий фактор</h3>
+                <p>Утомление после долгой смены может повлиять на реакцию и концентрацию водителя.</p>
+              </article>
+              <article class="landing-card">
+                <span class="landing-card-index">02 / ТЕХНИКА</span>
+                <h3>Цена простоя</h3>
+                <p>Авария с карьерным самосвалом или грузовым транспортом грозит дорогостоящим ремонтом и потерями.</p>
+              </article>
+              <article class="landing-card">
+                <span class="landing-card-index">03 / БЕЗОПАСНОСТЬ</span>
+                <h3>Жизнь и здоровье</h3>
+                <p>Главный приоритет — вовремя заметить опасные признаки и дать возможность принять меры.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="landing-section enterprise-section" aria-labelledby="enterprise-heading">
+            <div class="landing-section-heading">
+              <div class="eyebrow"><span class="eyebrow-line"></span> ДЛЯ ПРЕДПРИЯТИЯ</div>
+              <h2 id="enterprise-heading">Дополнительный уровень контроля автопарка</h2>
+              <p>FocusDrive задуман как инструмент раннего оповещения и удобного разбора событий — не замена инструктажу и решениям диспетчера.</p>
+            </div>
+            <div class="landing-card-grid enterprise-grid">
+              <article class="landing-card">
+                <span class="landing-card-index">01 / РАННЕЕ ОПОВЕЩЕНИЕ</span>
+                <h3>Замечать признаки усталости</h3>
+                <p>Концепция предусматривает анализ состояния водителя и предупреждение при обнаружении риска.</p>
+              </article>
+              <article class="landing-card">
+                <span class="landing-card-index">02 / МОНИТОРИНГ</span>
+                <h3>Поддержка сменной работы</h3>
+                <p>Автоматизированная проверка может дополнить внимание водителя и работу диспетчерской службы.</p>
+              </article>
+              <article class="landing-card">
+                <span class="landing-card-index">03 / АВТОПАРК</span>
+                <h3>Бережное отношение к технике</h3>
+                <p>Цель — снижать риски инцидентов, которые могут привести к повреждению транспорта и груза.</p>
+              </article>
+              <article class="landing-card">
+                <span class="landing-card-index">04 / АНАЛИТИКА</span>
+                <h3>История событий в одном месте</h3>
+                <p>В прототипе доступен локальный журнал предупреждений; централизованная аналитика автопарка — направление развития.</p>
+              </article>
+            </div>
+            <p class="landing-validation-note">
+              Показатель «снижение аварийности на 80%+» рассматривается только как целевой ориентир для будущей проверки.
+              Эффективность системы не подтверждена испытаниями и не гарантируется.
+            </p>
+            <div class="landing-cta">
+              <div>
+                <span class="landing-card-index">ПОСМОТРИТЕ, КАК УСТРОЕН ПРОТОТИП</span>
+                <h3>От видеопотока к предупреждению</h3>
+              </div>
+              <a class="landing-primary-link" href="#camera">Технологии камеры <span aria-hidden="true">↗</span></a>
+            </div>
+          </section>
+
+          <section class="overview-grid" aria-label="Состояние демонстрационного прототипа">
             <article class="stat-card status-card">
               <div class="card-topline">
-                <span class="stat-label">СОСТОЯНИЕ СИСТЕМЫ</span>
+                <span class="stat-label">СОСТОЯНИЕ ПРОТОТИПА</span>
                 <span class="status-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24"><path d="M12 3v9m0 0 4-4m-4 4L8 8m-4 5v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5" /></svg>
                 </span>
@@ -144,21 +326,21 @@
             </article>
             <article class="stat-card privacy-card">
               <div class="card-topline">
-                <span class="stat-label">ВАШИ ДАННЫЕ</span>
+                <span class="stat-label">ОБРАБОТКА ВИДЕО</span>
                 <span class="privacy-shield" aria-hidden="true">
                   <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" /><path d="m9 12 2 2 4-4" /></svg>
                 </span>
               </div>
-              <div class="stat-value">Только у вас</div>
-              <div class="stat-foot">Видео не отправляется на сервер</div>
+              <div class="stat-value">В браузере</div>
+              <div class="stat-foot">Кадры не отправляются на сервер</div>
             </article>
           </section>
 
           <section class="camera-section" id="camera" aria-labelledby="camera-heading">
             <div class="section-heading">
               <div>
-                <div class="eyebrow section-eyebrow"><span class="eyebrow-line"></span> МОНИТОРИНГ</div>
-                <h2 id="camera-heading">Камера наблюдения</h2>
+                <div class="eyebrow section-eyebrow"><span class="eyebrow-line"></span> ОБОРУДОВАНИЕ И ТЕХНОЛОГИИ</div>
+                <h2 id="camera-heading">Модуль видеоконтроля</h2>
               </div>
               <div class="camera-controls">
                 <label class="select-wrap">
@@ -209,26 +391,249 @@
             </div>
             <p class="prototype-disclaimer">
               <span aria-hidden="true">i</span>
-              Предупреждения — вспомогательная функция прототипа, а не сертифицированная система безопасности.
+              Сейчас это браузерный прототип: он предупреждает о длительном закрытии глаз и слишком тёмном кадре, но не является сертифицированной системой безопасности.
             </p>
+
+            <div class="camera-technology" data-access="staff">
+              <header class="technology-intro">
+                <div class="eyebrow"><span class="eyebrow-line"></span> КАК УСТРОЕНА СИСТЕМА</div>
+                <h2>От камеры в кабине до анализа изображения</h2>
+                <p>Для карьерной техники и дальних перевозок важны стабильная работа в темноте, вибрации и пыли. Ниже — требования к оборудованию, которые заложены в концепцию; они ещё не проверены в реальных условиях.</p>
+              </header>
+
+              <section class="technology-block" aria-labelledby="hardware-heading">
+                <div class="technology-block-heading">
+                  <span class="landing-card-index">01 / ПЛАНИРУЕМОЕ ОБОРУДОВАНИЕ</span>
+                  <h3 id="hardware-heading">Камера для условий тяжёлой техники</h3>
+                </div>
+                <div class="landing-card-grid hardware-grid">
+                  <article class="landing-card">
+                    <span class="landing-card-index">ИК-ПОДСВЕТКА</span>
+                    <h3>Видеть в темноте</h3>
+                    <p>Планируемая инфракрасная подсветка поможет получать изображение лица при слабом освещении без яркого видимого света.</p>
+                  </article>
+                  <article class="landing-card">
+                    <span class="landing-card-index">ЗАЩИТА КОРПУСА</span>
+                    <h3>Пыль и вибрации</h3>
+                    <p>Для установки в кабине рассматривается пыле- и влагозащищённое исполнение уровня IP67. Оно пока не реализовано в веб-прототипе.</p>
+                  </article>
+                  <article class="landing-card">
+                    <span class="landing-card-index">ОПТИКА</span>
+                    <h3>Нужная зона обзора</h3>
+                    <p>Широкоугольный объектив должен охватывать лицо водителя; обзор рук и направления взгляда потребует отдельной настройки и проверки.</p>
+                  </article>
+                  <article class="landing-card">
+                    <span class="landing-card-index">ОБРАБОТКА</span>
+                    <h3>Анализ рядом с водителем</h3>
+                    <p>Сейчас изображение анализируется в браузере. Встроенный вычислительный модуль для работы в кабине — возможный следующий этап.</p>
+                  </article>
+                </div>
+              </section>
+
+              <section class="technology-block" aria-labelledby="algorithm-heading">
+                <div class="technology-block-heading">
+                  <span class="landing-card-index">02 / КОМПЬЮТЕРНОЕ ЗРЕНИЕ</span>
+                  <h3 id="algorithm-heading">Что анализирует алгоритм</h3>
+                </div>
+                <ol class="algorithm-steps">
+                  <li class="algorithm-step">
+                    <span class="algorithm-step-number">01</span>
+                    <div><h4>Ключевые точки лица</h4><p>MediaPipe Face Landmarker находит ориентиры лица. Это используется прототипом для оценки состояния глаз.</p></div>
+                    <span class="algorithm-status is-active">ЕСТЬ В ПРОТОТИПЕ</span>
+                  </li>
+                  <li class="algorithm-step">
+                    <span class="algorithm-step-number">02</span>
+                    <div><h4>Закрытие глаз и тёмный кадр</h4><p>Предупреждения срабатывают, если глаза закрыты дольше 3 секунд или кадр остаётся почти чёрным более 5 секунд.</p></div>
+                    <span class="algorithm-status is-active">ЕСТЬ В ПРОТОТИПЕ</span>
+                  </li>
+                  <li class="algorithm-step">
+                    <span class="algorithm-step-number">03</span>
+                    <div><h4>Моргание и зевание</h4><p>Подсчёт частоты моргания и распознавание зевания можно добавить в следующих версиях; сейчас эти признаки не анализируются.</p></div>
+                    <span class="algorithm-status">ПЛАНИРУЕТСЯ</span>
+                  </li>
+                  <li class="algorithm-step">
+                    <span class="algorithm-step-number">04</span>
+                    <div><h4>Положение головы и направление взгляда</h4><p>Выявление наклона головы и длительного взгляда в сторону дороги требует разработки и отдельной проверки.</p></div>
+                    <span class="algorithm-status">ПЛАНИРУЕТСЯ</span>
+                  </li>
+                </ol>
+              </section>
+            </div>
           </section>
 
-          <section class="about-section" id="about">
+          <section class="about-section" data-access="teacher">
             <div class="about-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" /><path d="m9 12 2 2 4-4" /></svg>
             </div>
             <div>
               <strong>Безопасность начинается с внимания</strong>
-              <p>Проект «Смена» задуман, чтобы помогать замечать признаки усталости за рулём.</p>
+              <p>Рассказываю, зачем я начал этот проект и каким вижу его развитие.</p>
             </div>
-            <a href="#camera" class="about-link" aria-label="Перейти к камере">↗</a>
+            <a href="#about" class="about-link" aria-label="Подробнее о проекте">↗</a>
           </section>
 
           <footer class="page-footer">
-            <span>СМЕНА <span class="footer-dot">·</span> УЧЕБНЫЙ ПРОЕКТ</span>
+            <span>FOCUSDRIVE <span class="footer-dot">·</span> УЧЕБНЫЙ ПРОЕКТ</span>
             <span>Забота о водителе — забота о каждом</span>
+            <span class="copyright">© 2026 Тушин Тигран. Все права защищены.</span>
           </footer>
         </div>
+
+        <section class="page-content about-page" id="about" aria-labelledby="about-heading">
+          <header class="about-hero">
+            <div class="about-hero-copy">
+              <div class="eyebrow"><span class="eyebrow-line"></span> МОЯ ИДЕЯ · МОЯ РАЗРАБОТКА</div>
+              <h1 id="about-heading">Чтобы каждый<br />маршрут заканчивался<br />благополучно<span>.</span></h1>
+              <p class="about-lead">
+                Привет! Меня зовут Тигран. Я учусь на первом курсе по специальности
+                «Автоматизация и управление». FocusDrive — мой учебный проект о том,
+                как компьютерное зрение может помочь вовремя заметить усталость за рулём.
+              </p>
+            </div>
+            <div class="about-hero-mark" aria-hidden="true">
+              <span class="about-hero-ring"></span>
+              <svg viewBox="0 0 64 64" fill="none">
+                <path d="M7 34h12l7-18 12 34 8-20h11" />
+                <circle cx="32" cy="32" r="28" />
+              </svg>
+              <span class="about-mark-caption">БЕЗОПАСНОСТЬ · ВНИМАНИЕ · ЗАБОТА</span>
+            </div>
+          </header>
+
+          <section class="about-story" aria-labelledby="about-why">
+            <div class="about-section-label">
+              <span>01</span>
+              <span class="eyebrow-line"></span>
+              <span>ЗАЧЕМ ЭТО НУЖНО</span>
+            </div>
+            <div class="about-story-copy">
+              <h2 id="about-why">Усталость за рулём — это риск, который важно заметить вовремя.</h2>
+              <p>
+                В долгой смене внимание постепенно притупляется. Водитель может не сразу
+                понять, насколько сильно устал, а на дороге или в карьере цена одной
+                ошибки особенно высока. Мне хочется разобраться, как автоматизация может
+                стать дополнительной поддержкой в такой ситуации.
+              </p>
+              <p>
+                Я задумал FocusDrive как систему, которая наблюдает за состоянием водителя
+                и предупреждает о признаках утомления. Это моя учебная работа и первый
+                шаг к более серьёзной разработке.
+              </p>
+            </div>
+          </section>
+
+          <section class="about-workflow" aria-labelledby="about-how">
+            <div class="about-section-label">
+              <span>02</span>
+              <span class="eyebrow-line"></span>
+              <span>КАК Я ВИЖУ СИСТЕМУ</span>
+            </div>
+            <h2 id="about-how">Три шага от наблюдения к предупреждению</h2>
+            <div class="about-feature-grid">
+              <article class="about-feature-card">
+                <span class="about-feature-number">01 / КАМЕРА</span>
+                <span class="about-feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2" /><path d="m16 10 5-3v10l-5-3" /></svg>
+                </span>
+                <h3>Наблюдать</h3>
+                <p>Камера в кабине передаёт изображение для анализа поведения водителя.</p>
+              </article>
+              <article class="about-feature-card">
+                <span class="about-feature-number">02 / АНАЛИЗ</span>
+                <span class="about-feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z" /><circle cx="12" cy="12" r="2.5" /></svg>
+                </span>
+                <h3>Замечать признаки</h3>
+                <p>Алгоритмы оценивают закрытие глаз, моргание, зевание, положение головы и отвлечение.</p>
+              </article>
+              <article class="about-feature-card">
+                <span class="about-feature-number">03 / РЕАКЦИЯ</span>
+                <span class="about-feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-8 12h4" /></svg>
+                </span>
+                <h3>Предупреждать</h3>
+                <p>При обнаружении опасных признаков система должна привлечь внимание водителя.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="about-two-column">
+            <article class="about-info-card">
+              <div class="about-section-label">
+                <span>03</span>
+                <span class="eyebrow-line"></span>
+                <span>ДАЛЬШЕ ПО ПЛАНУ</span>
+              </div>
+              <h2>Не только состояние водителя</h2>
+              <p>
+                В дальнейшем я хочу изучить, можно ли дополнить систему анализом дорожной
+                обстановки: отслеживать траекторию и замечать опасное отклонение от полосы.
+                Если водитель не реагирует на предупреждение, следующим шагом может стать
+                связь с диспетчером, чтобы тот помог организовать безопасную остановку.
+              </p>
+              <p class="about-plan-note">
+                Эти функции пока являются планами развития, а не возможностями текущего прототипа.
+              </p>
+            </article>
+            <article class="about-info-card about-audience-card">
+              <div class="about-section-label">
+                <span>04</span>
+                <span class="eyebrow-line"></span>
+                <span>ДЛЯ КОГО</span>
+              </div>
+              <h2>Работа, где особенно важна концентрация</h2>
+              <ul class="about-audience-list">
+                <li>Карьерная и горнодобывающая техника</li>
+                <li>Дальние грузовые перевозки</li>
+                <li>Длительные и вахтовые смены</li>
+                <li>Транспортные и логистические предприятия</li>
+              </ul>
+            </article>
+          </section>
+
+          <section class="about-prototype-note" aria-label="Состояние прототипа">
+            <span class="about-note-icon" aria-hidden="true">i</span>
+            <div>
+              <strong>Что работает сейчас</strong>
+              <p>
+                В прототипе можно подключить камеру, увидеть локальный предпросмотр,
+                проверить закрытие глаз и слишком тёмный кадр, а также посмотреть
+                уведомления и локальную историю. Анализ дороги, звуковой сигнал
+                и связь с диспетчером ещё не реализованы.
+              </p>
+            </div>
+            <a class="about-camera-link" href="#camera">К камере <span aria-hidden="true">↗</span></a>
+          </section>
+
+          <section class="about-purpose" aria-labelledby="about-purpose-heading">
+            <span class="about-purpose-kicker">МОЯ ЦЕЛЬ</span>
+            <h2 id="about-purpose-heading">Сделать дорогу безопаснее — для водителя и для всех вокруг.</h2>
+            <p>Спасибо, что заглянули и познакомились с моим проектом.</p>
+          </section>
+
+          <section class="about-rights" aria-labelledby="about-rights-heading">
+            <div>
+              <div class="about-section-label">
+                <span>05</span>
+                <span class="eyebrow-line"></span>
+                <span>АВТОРСТВО</span>
+              </div>
+              <h2 id="about-rights-heading">Идея и проект — Тушин Тигран</h2>
+              <p>
+                Тексты, описание концепции, материалы и оригинальные решения проекта
+                подготовлены автором. Пожалуйста, не копируйте и не используйте их
+                без разрешения.
+              </p>
+            </div>
+            <span class="about-rights-mark">© 2026</span>
+          </section>
+
+          <footer class="page-footer">
+            <span>FOCUSDRIVE <span class="footer-dot">·</span> О ПРОЕКТЕ</span>
+            <span>Учебная разработка Тушина Тиграна</span>
+            <span class="copyright">© 2026 Тушин Тигран. Все права защищены.</span>
+          </footer>
+        </section>
 
         <section class="page-content workers-page" id="workers" aria-labelledby="workers-heading">
           <header class="workers-heading">
@@ -272,7 +677,7 @@
             <div class="worker-alert-list" id="worker-alerts" aria-live="polite">
               <div class="worker-empty" id="worker-alerts-empty">
                 <span class="empty-check" aria-hidden="true">✓</span>
-                <div><strong>Пока нет предупреждений</strong><p>Подключите камеру на главной — здесь появятся события мониторинга.</p></div>
+                <div><strong>Пока нет предупреждений</strong><p>Подключите камеру во вкладке «Камера» — здесь появятся события мониторинга.</p></div>
               </div>
             </div>
           </section>
@@ -305,8 +710,9 @@
             <p><strong>Важно:</strong> распознавание лица выполняется в браузере с помощью модели MediaPipe. Для загрузки модели и библиотеки нужно подключение к интернету; кадры при этом не отправляются и не сохраняются. Система является прототипом и не заменяет контроль водителя человеком.</p>
           </aside>
           <footer class="page-footer">
-            <span>СМЕНА <span class="footer-dot">·</span> КАБИНЕТ РАБОТНИКОВ</span>
+            <span>FOCUSDRIVE <span class="footer-dot">·</span> КАБИНЕТ РАБОТНИКОВ</span>
             <span>Журнал хранится локально на этом устройстве</span>
+            <span class="copyright">© 2026 Тушин Тигран. Все права защищены.</span>
           </footer>
         </section>
       </main>
