@@ -16,6 +16,8 @@ let currentRole = null;
 const video = document.querySelector("#camera-video");
 const cameraButton = document.querySelector("#camera-button");
 const cameraButtonLabel = document.querySelector("#camera-button-label");
+const faceOverlay = document.querySelector("#face-overlay");
+const faceOverlayContext = faceOverlay.getContext("2d");
 const cameraSelect = document.querySelector("#camera-select");
 const cameraLabel = document.querySelector("#selected-camera-label");
 const systemStatus = document.querySelector("#system-status");
@@ -327,6 +329,7 @@ function stopMonitoring(interrupted = true) {
 
 function stopCamera(interrupted = false) {
   stopMonitoring(interrupted);
+  clearFaceBox();
   if (stream) {
     stream.getTracks().forEach((track) => track.stop());
     stream = null;
@@ -422,6 +425,70 @@ function isEyesClosed(landmarks) {
   return leftRatio < EYE_CLOSED_RATIO && rightRatio < EYE_CLOSED_RATIO;
 }
 
+function clearFaceBox() {
+  if (!faceOverlayContext) return;
+  faceOverlayContext.clearRect(0, 0, faceOverlay.width, faceOverlay.height);
+  faceOverlay.hidden = true;
+  faceOverlay.classList.remove("eyes-closed");
+}
+
+function drawFaceBox(landmarks, eyesClosed) {
+  if (!landmarks?.length || !video.videoWidth || !video.videoHeight || !faceOverlayContext) {
+    clearFaceBox();
+    return;
+  }
+
+  const width = faceOverlay.parentElement.clientWidth;
+  const height = faceOverlay.parentElement.clientHeight;
+  if (!width || !height) {
+    clearFaceBox();
+    return;
+  }
+
+  const scale = Math.max(width / video.videoWidth, height / video.videoHeight);
+  const renderedWidth = video.videoWidth * scale;
+  const renderedHeight = video.videoHeight * scale;
+  const offsetX = (width - renderedWidth) / 2;
+  const offsetY = (height - renderedHeight) / 2;
+  const points = landmarks.filter((point) => Number.isFinite(point.x) && Number.isFinite(point.y));
+  if (!points.length) {
+    clearFaceBox();
+    return;
+  }
+
+  const left = Math.min(...points.map((point) => point.x)) * renderedWidth + offsetX;
+  const right = Math.max(...points.map((point) => point.x)) * renderedWidth + offsetX;
+  const top = Math.min(...points.map((point) => point.y)) * renderedHeight + offsetY;
+  const bottom = Math.max(...points.map((point) => point.y)) * renderedHeight + offsetY;
+  const horizontalPadding = (right - left) * 0.08;
+  const verticalPadding = (bottom - top) * 0.08;
+  const boxLeft = Math.max(0, left - horizontalPadding);
+  const boxTop = Math.max(0, top - verticalPadding);
+  const boxRight = Math.min(width, right + horizontalPadding);
+  const boxBottom = Math.min(height, bottom + verticalPadding);
+  if (boxRight <= boxLeft || boxBottom <= boxTop) {
+    clearFaceBox();
+    return;
+  }
+  const pixelRatio = window.devicePixelRatio || 1;
+
+  if (faceOverlay.width !== Math.round(width * pixelRatio) || faceOverlay.height !== Math.round(height * pixelRatio)) {
+    faceOverlay.width = Math.round(width * pixelRatio);
+    faceOverlay.height = Math.round(height * pixelRatio);
+  }
+
+  faceOverlayContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+  faceOverlayContext.clearRect(0, 0, width, height);
+  faceOverlayContext.strokeStyle = eyesClosed ? "#ff3e6c" : "#ffd43b";
+  faceOverlayContext.lineWidth = 3;
+  faceOverlayContext.shadowColor = faceOverlayContext.strokeStyle;
+  faceOverlayContext.shadowBlur = 9;
+  faceOverlayContext.strokeRect(boxLeft, boxTop, boxRight - boxLeft, boxBottom - boxTop);
+  faceOverlayContext.shadowBlur = 0;
+  faceOverlay.hidden = false;
+  faceOverlay.classList.toggle("eyes-closed", eyesClosed);
+}
+
 function measureFrameBrightness() {
   if (!brightnessContext || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) return null;
   brightnessContext.drawImage(video, 0, 0, brightnessCanvas.width, brightnessCanvas.height);
@@ -507,11 +574,13 @@ function updateLastCheck(now, faceDetected, brightness) {
 
 function analyzeFrame(now) {
   if (!stream || !landmarker || !video.srcObject) {
+    clearFaceBox();
     analysisFrameId = null;
     return;
   }
 
   if (document.hidden || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+    clearFaceBox();
     eyeClosedSince = null;
     darknessSince = null;
     analysisFrameId = requestAnimationFrame(analyzeFrame);
@@ -534,11 +603,13 @@ function analyzeFrame(now) {
   try {
     const result = landmarker.detectForVideo(video, now);
     const landmarks = result.faceLandmarks?.[0];
+    const eyesClosed = Boolean(landmarks && isEyesClosed(landmarks));
+    drawFaceBox(landmarks, eyesClosed);
     const brightness = measureFrameBrightness();
     updateCondition("darkness", Boolean(brightness?.dark), now, DARKNESS_THRESHOLD_MS);
     updateCondition(
       "eyes",
-      Boolean(landmarks && isEyesClosed(landmarks)),
+      eyesClosed,
       now,
       EYE_CLOSED_THRESHOLD_MS,
     );
@@ -546,6 +617,7 @@ function analyzeFrame(now) {
   } catch (error) {
     console.error("Ошибка анализа кадра камеры:", error);
     stopMonitoring(true);
+    clearFaceBox();
     setMonitorStatus("Анализ остановлен из-за ошибки", true, true);
     showToast("Не удалось обработать видео. Переподключите камеру.");
     return;

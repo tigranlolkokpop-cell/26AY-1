@@ -362,6 +362,7 @@
 
             <div class="camera-frame" id="camera-frame">
               <video id="camera-video" autoplay playsinline muted aria-label="Предпросмотр с камеры"></video>
+              <canvas class="face-overlay" id="face-overlay" aria-hidden="true" hidden></canvas>
               <div class="camera-overlay" id="camera-placeholder">
                 <div class="camera-decoration decoration-top-left"></div>
                 <div class="camera-decoration decoration-top-right"></div>
@@ -389,9 +390,13 @@
               <div class="camera-error" id="camera-error" role="alert" hidden></div>
               <div class="camera-alert-stack" id="camera-alerts" role="alert" aria-live="assertive" hidden></div>
             </div>
+            <div class="face-box-legend" aria-label="Обозначения рамки лица">
+              <span><i class="face-box-key face-box-key-open" aria-hidden="true"></i> Лицо обнаружено</span>
+              <span><i class="face-box-key face-box-key-closed" aria-hidden="true"></i> Глаза закрыты</span>
+            </div>
             <p class="prototype-disclaimer">
               <span aria-hidden="true">i</span>
-              Сейчас это браузерный прототип: он предупреждает о длительном закрытии глаз и слишком тёмном кадре, но не является сертифицированной системой безопасности.
+              Жёлтая рамка показывает найденное лицо и становится красной при закрытии глаз. Предупреждение и запись нарушения появляются, если глаза остаются закрытыми дольше 3 секунд. Это учебный прототип, а не сертифицированная система безопасности.
             </p>
 
             <div class="camera-technology" data-access="staff">
